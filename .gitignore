@@ -1,1 +1,7 @@
+# Libraries
 /node_modules/
+
+# .env files for security
+.env
+*.env
+*/.env
