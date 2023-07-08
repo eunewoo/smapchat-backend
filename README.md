@@ -12,6 +12,6 @@ This is an Backend server for project Hyoro Jasik
 
 - DB Handler : Mongoose.js
 
-- Hosting by : Amazone web services Elastic Compute Cloud
+- Hosting by : Amazon web services Elastic Compute Cloud
 
   - Considering with Firebase functions
