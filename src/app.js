@@ -3,6 +3,7 @@ import express, { Router } from "express";
 import console_logger from "../middlewares/console_logger.js";
 
 import { userRouter } from "../routers/userRouter.js";
+import { walkLogRouter } from "../routers/walkLogRouter.js";
 
 const app = express();
 
@@ -22,5 +23,6 @@ rootRouter.get("/", async function (req, res, next) {
 
 app.use(rootRouter);
 app.use(userRouter);
+app.use(walkLogRouter);
 
 export { app };

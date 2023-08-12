@@ -1,15 +1,39 @@
 import mongoose from "mongoose";
 
 const UserSchema = new mongoose.Schema({
+  phoneNumber: {
+    type: Number,
+    required: true,
+    unique: true,
+  },
   name: {
     type: String,
     required: true,
-    unique: false,
+    unique: true,
   },
-  count: {
+  gender: {
+    /**
+     * -1 : Anomaly
+     * 0 : Male
+     * 1 : Female
+     */
     type: Number,
     required: true,
-    default: 0,
+    unique: false,
+  },
+  age: {
+    type: Date,
+    required: true,
+    unique: false,
+  },
+  height: {
+    type: Number,
+    required: true,
+    unique: false,
+  },
+  walkgoal: {
+    type: Number,
+    required: false,
     unique: false,
   },
 });

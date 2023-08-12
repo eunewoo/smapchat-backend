@@ -1,43 +1,74 @@
 import { Router } from "express";
-import { userHandle } from "../services/userService.js";
+import { userAuth } from "../services/userService.js";
 import console_logger from "../middlewares/console_logger.js";
 
 const userRouter = Router();
 
-userRouter.post("/user/create", async (req, res, next) => {
+userRouter.get("/user", async (req, res, next) => {
   try {
-    const { name } = req.body;
-    const NEW_USER = await userHandle.addUser({ name });
-
-    res.status(201).send({ NEW_USER });
+    res.status(200).send({ result: "succeed to test" });
   } catch (err) {
-    console_logger("Router Error", err.message, true);
     next(err);
   }
 });
 
-userRouter.post("/user/count", async (req, res, next) => {
+userRouter.post("/user/signup", async (req, res, next) => {
   try {
-    const { oid } = req.body;
-    const count = await userHandle.getCount({ oid });
+    if (is.emptyObject(req.body)) throw new Error("invalid body data");
 
-    if (!count) throw Error("There is no count field in that user data");
+    const { phoneNumber, name, gender, bod, height, walkgoal } = req.body;
+    console.log("Trying to sign up...");
 
-    res.status(201).send({ count });
+    const BoD_elements = bod.split("-");
+    const BoD_dateform = new Date(
+      BoD_elements[0],
+      BoD_elements[1],
+      BoD_elements[2]
+    );
+
+    const NEW_USER = await userAuth.addUser({
+      phoneNumber,
+      name,
+      gender,
+      bod: BoD_dateform,
+      height,
+      walkgoal,
+    });
+
+    if (NEW_USER.errorMsg) throw new Error(NEW_USER.errorMsg);
+    return res.status(201).json(NEW_USER);
   } catch (err) {
-    console_logger("Router Error", err.message, true);
     next(err);
   }
 });
 
-userRouter.post("/user/update", async (req, res, next) => {
+userRouter.post("/user/signin", async (req, res, next) => {
   try {
-    const { oid, count } = req.body;
-    const updated = await userHandle.updateCount({ oid, count });
+    if (is.emptyObject(req.body)) throw new Error("invalid body data");
 
-    res.status(201).send({ updated });
+    const { id, password } = req.body;
+    console.log("SignIn Trying");
+
+    const USER = await userAuth.checkUserByIdPw({ id, password });
+
+    const TODAY = new Date();
+    const BoD = new Date(USER.bod);
+
+    const CALCULATED_AGE = TODAY.getFullYear() - BoD.getFullYear();
+
+    const SEX_STRING = ["Male", "Female"][USER.sex + 1];
+
+    if (!USER) throw new Error("no user");
+    return res.status(200).send({
+      uid: USER._id,
+      phoneNumber: USER.phoneNumber,
+      name: USER.name,
+      gender: GENDER_STRING,
+      bod: CALCULATED_AGE,
+      height: USER.height,
+      workgoal: USER.workgoal,
+    });
   } catch (err) {
-    console_logger("Router Error", err.message, true);
     next(err);
   }
 });
