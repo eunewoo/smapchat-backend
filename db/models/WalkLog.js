@@ -2,7 +2,7 @@ import { WalkLogModel } from "../schemas/walkLog.js";
 
 class WalkLog {
   static async findByPhoneNumber({ phoneNumber }) {
-    const walkLog = await UserModel.findOne({ phoneNumber });
+    const walkLog = await WalkLogModel.findOne({ phoneNumber });
     return walkLog;
   }
   static async findByPhoneNumberwithDate({ phoneNumber, Date }) {
@@ -10,7 +10,7 @@ class WalkLog {
     return LOGS;
   }
   static async updateInfo({ phoneNumber, date, fieldToUpdate, newValue }) {
-    const FILTER = { phoneNumber, date };
+    const FILTER = { phoneNumber };
     const UPDATE = { [fieldToUpdate]: newValue };
     const OPTION = { returnOriginal: false };
 

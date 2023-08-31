@@ -13,7 +13,6 @@ const UserSchema = new mongoose.Schema({
   },
   gender: {
     /**
-     * -1 : Anomaly
      * 0 : Male
      * 1 : Female
      */
@@ -21,13 +20,13 @@ const UserSchema = new mongoose.Schema({
     required: true,
     unique: false,
   },
-  age: {
-    type: Date,
+  height: {
+    type: Number,
     required: true,
     unique: false,
   },
-  height: {
-    type: Number,
+  bod: {
+    type: Date,
     required: true,
     unique: false,
   },

@@ -3,6 +3,8 @@ import dotenv from "dotenv";
 import console_logger from "../middlewares/console_logger.js";
 
 import { User } from "./models/User.js";
+import { WalkLog } from "./models/WalkLog.js";
+import { Disease } from "./models/Disease.js";
 
 dotenv.config();
 const { DOTENV_MSG, DB_URL } = process.env;
@@ -27,4 +29,4 @@ DB.on("error", (err) => {
   );
 });
 
-export { User };
+export { User, WalkLog, Disease };

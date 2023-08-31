@@ -1,17 +1,22 @@
-// import mongoose from "mongoose";
+import mongoose from "mongoose";
 
-// const DiseaseSchema = new mongoose.Schema({
-//   diseaseId: {
-//     type: String,
-//     required: true,
-//     unique: false,
-//   },
-//   diseaseId: {
-//     type: String,
-//     required: true,
-//     unique: false,
-//   },
-// });
+const DiseaseSchema = new mongoose.Schema({
+  phoneNumber: {
+    type: Number,
+    required: true,
+    unique: true,
+  },
+  diseaseId: {
+    type: Number,
+    required: true,
+    unique: false,
+  },
+  diseaseKind: {
+    type: String,
+    required: true,
+    unique: false,
+  },
+});
 
-// const DiseaseModel = mongoose.model("DiseaseLog", DiseaseSchema);
-// export { DiseaseModel };
+const DiseaseModel = mongoose.model("DiseaseLog", DiseaseSchema);
+export { DiseaseModel };

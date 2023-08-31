@@ -11,6 +11,11 @@
 //     required: true,
 //     unique: false,
 //   },
+//   diseaseNum: {
+//     type: Number,
+//     required: true,
+//     unique: false,
+//   },
 // });
 
 // const DiseaseLogModel = mongoose.model("DiseaseLog", DiseaseLogSchema);

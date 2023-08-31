@@ -9,6 +9,15 @@ class User {
     const USER = await UserModel.findOne({ phoneNumber });
     return USER;
   }
+  static async deleteByPhoneNumber({ phoneNumber }) {
+    const result = await UserModel.deleteOne({ phoneNumber });
+    if (result.deletedCount > 0) {
+      return { success: true, message: "User deleted successfully." };
+    } else {
+      return { success: false, message: "User not found or deletion failed." };
+    }
+  }
+
   static async updateInfo({ phoneNumber, fieldToUpdate, newValue }) {
     const FILTER = { phoneNumber };
     const UPDATE = { [fieldToUpdate]: newValue };
@@ -19,7 +28,6 @@ class User {
       UPDATE,
       OPTION,
     });
-
     return UPDATED_USER;
   }
 }

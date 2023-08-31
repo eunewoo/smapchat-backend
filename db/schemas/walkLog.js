@@ -9,6 +9,7 @@ const WalkLogSchema = new mongoose.Schema({
   steps: {
     type: Number,
     required: true,
+    defulat: 0,
     unique: false,
   },
   date: {
