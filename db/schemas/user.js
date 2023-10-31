@@ -1,39 +1,56 @@
 import mongoose from "mongoose";
 
 const UserSchema = new mongoose.Schema({
-  phoneNumber: {
+  userID: {
     type: Number,
     required: true,
     unique: true,
   },
-  name: {
+  email: {
     type: String,
     required: true,
     unique: true,
   },
-  gender: {
-    /**
-     * 0 : Male
-     * 1 : Female
-     */
-    type: Number,
+  username: {
+    type: String,
+    required: true,
+    unique: false,
+    maxlength: 20,
+  },
+  password: {
+    type: String,
     required: true,
     unique: false,
   },
-  height: {
-    type: Number,
-    required: true,
-    unique: false,
-  },
-  bod: {
-    type: Date,
-    required: true,
-    unique: false,
-  },
-  walkgoal: {
-    type: Number,
+  avatar: {
+    type: String,
     required: false,
     unique: false,
+  },
+  isActive: {
+    type: Boolean,
+    required: true,
+    default: true,
+  },
+  mapList: {
+    type: [Number], // This assumes that mapList is an array of numbers.
+    required: false,
+    unique: false,
+  },
+  userType: {
+    type: Number,
+    required: true,
+    enum: [0, 1],
+  },
+  // email authentication
+  verificationCode: {
+    type: String,
+    required: false,
+  },
+  isVerified: {
+    type: Boolean,
+    default: false,
+    required: true,
   },
 });
 

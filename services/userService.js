@@ -1,54 +1,71 @@
-import { User } from "../db/index.js";
-import console_logger from "../middlewares/console_logger.js";
+import { User } from "../models/User.js";
+import bcrypt from "bcryptjs";
+import { sendMail } from "./mailService.js";
 
-class userAuth {
-  static async checkPhoneNumber({ phoneNumber }) {
-    const USER = await User.findByPhoneNumber({ phoneNumber });
-    if (USER) return USER;
-    else false;
+class userAuthService {
+  static async getUserByEmail(email, password) {
+    const user = await User.findByEmail(email);
+    if (!user) throw new Error("User not found");
+
+    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+    if (!isPasswordCorrect) throw new Error("Incorrect password");
+
+    return user;
   }
 
-  /**
-   * Singup
-   */
-  static async addUser({ phoneNumber, name, gender, bod, height, walkgoal }) {
-    // if (!name || !password) {
-    //   console.error("Some values are missed for sign-up");
-    //   return { errorMsg: "validation_failed" };
-    // }
+  static async createUser(email, username, password, avatar) {
+    return await User.createUser(email, username, password, avatar);
+  }
 
-    const NEW_USER = {
-      phoneNumber,
-      name,
-      gender,
-      bod,
-      height,
-      walkgoal,
-    };
+  static async updateActivationStatus(userId, isActive) {
+    return await User.updateActivationStatus(userId, isActive);
+  }
 
-    // console.log(NEW_USER);
-    try {
-      const CREATED_UESR = await User.create({ NEW_USER });
-    } catch (e) {
-      console.log(e);
+  static async deleteUserById(userId) {
+    return await User.deleteUserById(userId);
+  }
+
+  static async updateProfile(userId, updatedData) {
+    const user = await User.findById(userId);
+    if (!user) throw new Error("User not found");
+
+    if (
+      updatedData.password &&
+      !(await bcrypt.compare(updatedData.currentPassword, user.password))
+    ) {
+      throw new Error("Current password is incorrect");
     }
 
-    return CREATED_UESR;
+    if (updatedData.newPassword) {
+      updatedData.password = await bcrypt.hash(updatedData.newPassword, 10);
+      delete updatedData.newPassword;
+      delete updatedData.currentPassword;
+    }
+
+    return await User.updateProfile(userId, updatedData);
   }
 
-  static async checkUserByIdPw({ id, password }) {
-    const USER = await User.findById({ id });
-    if (!USER) return false;
-
-    const IS_CORRECT = await bcrypt.compare(password, USER.encryptedPassword);
-    if (IS_CORRECT) return USER;
-
-    return false;
+  static async verifyCode(userId, code) {
+    return await User.verifyCode(userId, code);
   }
 
-  static async deleteByPhoneNumber({ phoneNumber }) {
-    const walkLog = await User.deleteByPhoneNumber({ phoneNumber });
-    return walkLog;
+  static async forgotPassword(email) {
+    const user = await UserModel.findOne({ email: email });
+
+    if (!user) throw new Error("No user with that email address");
+
+    const tempPassword = generateTempPassword(); // Implement this function
+    const hashedPassword = await bcrypt.hash(tempPassword, 10);
+
+    user.password = hashedPassword;
+    await user.save();
+
+    // Send temporary password via email
+    await sendMail(
+      user.email,
+      "Temporary Password",
+      `Your temporary password is: ${tempPassword}`
+    );
   }
 }
 
